@@ -516,9 +516,28 @@ ollama (free) ──▶ openai (paid) ──▶ anthropic (paid)
 ├── pyproject.toml
 ├── .env.example
 ├── README.md
-├── LINKEDIN.md
 └── .gitignore
 ```
+
+---
+
+## Screenshots
+
+| Dashboard | Attackers Dashboard |
+|---|---|
+| ![Dashboard](ShadowHiveSS/Dashboard.png) | ![Attackers](ShadowHiveSS/Attackers%20Dashboard.png) |
+
+| Threat Intel | Threat Events |
+|---|---|
+| ![Threat Intel](ShadowHiveSS/Threat%20Intel.png) | ![Threat Events](ShadowHiveSS/Threat%20Events.png) |
+
+| Company Profile | Employees | Documents |
+|---|---|---|
+| ![Profile](ShadowHiveSS/Company%20Profile%20Generated.png) | ![Employees](ShadowHiveSS/Company%20profile%20Employees.png) | ![Documents](ShadowHiveSS/Company%20profile%20documents.png) |
+
+| Infrastructure | Logs | User Management |
+|---|---|---|
+| ![Infra](ShadowHiveSS/Company%20Profile%20Infra.png) | ![Logs](ShadowHiveSS/Logs.png) | ![Users](ShadowHiveSS/User%20Management.png) |
 
 ---
 
@@ -640,7 +659,7 @@ ANTHROPIC_API_KEY=sk-ant-...
 
 Auth is enabled by default. Navigate to http://localhost:3000 — you'll be redirected to the login page.
 
-Default admin credentials (created on first start): `shadowhive` / `admin123`
+Default admin credentials (created on first start): `admin@shadowhive.local` / `admin123`
 
 #### Security Features
 
@@ -770,7 +789,7 @@ Auth is controlled by `AUTH_ENABLED` env var (default: `true`). When enabled:
 | `DELETE` | `/api/admin/users/{id}` | Delete user (admin only) |
 | `POST` | `/api/admin/users/{id}/reset-password` | Admin force reset password |
 
-**Default admin** (created on first startup): `shadowhive` / `admin123` — must change password on first login.
+**Default admin** (created on first startup): `admin@shadowhive.local` / `admin123` — must change password on first login.
 
 **Account lockout:** After 5 consecutive failed login attempts, the account is locked for 15 minutes (configurable via `auth.lockout.*`). Unlock via database: `UPDATE users SET failed_login_attempts = 0, locked_until = NULL WHERE email = '...'`. Rate limiting (10 req/60s per IP) applies to `/register`, `/login`, and `/change-password`.
 
