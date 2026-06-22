@@ -1,0 +1,131 @@
+{% extends "base.html" %}
+{% block content %}
+
+<!-- debug endpoints pending cleanup -->
+
+{% if not authed %}
+<section class="section">
+<div class="container">
+<div class="admin-login">
+  <h3>Administration Login</h3>
+  <form method="GET" action="/admin">
+    <label>Username</label>
+    <input type="text" name="username" placeholder="admin" value="admin">
+    <label>Password</label>
+    <input type="password" name="password" placeholder="&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;">
+    <button type="submit" class="btn">Sign In</button>
+  </form>
+</div>
+</div>
+</section>
+{% else %}
+
+<div class="admin-layout">
+<div class="admin-sidebar">
+  <h3>{% if company %}{{company.name}}{% else %}Admin{% endif %}</h3>
+  <div class="section-label">Main</div>
+  <a href="javascript:void(0)" class="active">Dashboard</a>
+  <a href="javascript:void(0)">Employees</a>
+  <a href="javascript:void(0)">Documents</a>
+  <a href="javascript:void(0)">Email</a>
+  <div class="section-label">System</div>
+  <a href="javascript:void(0)">Settings</a>
+  <a href="javascript:void(0)">Audit Log</a>
+  <a href="javascript:void(0)">Backup</a>
+  <div class="section-label">Account</div>
+  <a href="/" class="sidebar-link-accent">Back to Site</a>
+</div>
+<div class="admin-main">
+  <h2>Dashboard</h2>
+  <p class="breadcrumb"><a href="/">Home</a> / Admin / Dashboard</p>
+
+  {% if company %}
+  <div class="exposed mb-24">
+    <strong>Logged in as:</strong> admin@{{company.name|lower|replace(' ', '')[:15]}}.com<br>
+    <strong>Role:</strong> System Administrator &bull;
+    <strong>Session:</strong> Active since {{now.strftime('%Y-%m-%d %H:%M:%S')}} &bull;
+    <strong>IP:</strong> 10.0.0.12
+  </div>
+  {% endif %}
+
+  <div class="admin-metrics">
+    <div class="metric">
+      <div class="value">{{company.employees|length if company else 0}}</div>
+      <div class="label">Employees</div>
+      <div class="trend up">&#9650; 3 this quarter</div>
+    </div>
+    <div class="metric">
+      <div class="value">{{company.emails|length if company else 0}}</div>
+      <div class="label">Mailbox Accounts</div>
+      <div class="trend up">&#9650; 12 new today</div>
+    </div>
+    <div class="metric">
+      <div class="value">{{company.documents|length if company else 0}}</div>
+      <div class="label">Internal Docs</div>
+      <div class="trend neutral">&#9644; No change</div>
+    </div>
+    <div class="metric">
+      <div class="value">{% if company %}{{company.org_chart|length if company.org_chart else 0}}{% else %}0{% endif %}</div>
+      <div class="label">Departments</div>
+      <div class="trend up">&#9650; 1 restructured</div>
+    </div>
+    <div class="metric">
+      <div class="value value-green">100%</div>
+      <div class="label">Uptime</div>
+      <div class="trend up">&#9650; All systems operational</div>
+    </div>
+  </div>
+
+  <div class="admin-section">
+    <h3>Recent Emails</h3>
+    <table>
+      <thead><tr><th>Subject</th><th>Date</th><th>Status</th></tr></thead>
+      <tbody>
+      {% for email in company.emails[:5] %}
+      <tr>
+        <td><a href="javascript:void(0)" class="table-link">{{email.subject[:60]}}</a></td>
+        <td class="cell-muted">{% if email.sent_at %}{{email.sent_at}}{% else %}—{% endif %}</td>
+        <td><span class="admin-badge success">Delivered</span></td>
+      </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <div class="admin-section">
+    <h3>Internal Documents</h3>
+    <table>
+      <thead><tr><th>Title</th><th>Type</th><th>Access</th></tr></thead>
+      <tbody>
+      {% for doc in company.documents %}
+      <tr>
+        <td><a href="javascript:void(0)" class="table-link">{{doc.title}}</a></td>
+        <td><span class="admin-badge info">{{doc.doc_type}}</span></td>
+        <td><span class="admin-badge warning">Internal</span></td>
+      </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <div class="admin-section">
+    <h3>Employee Directory</h3>
+    <table>
+      <thead><tr><th>Name</th><th>Title</th><th>Department</th><th>Email</th></tr></thead>
+      <tbody>
+      {% for emp in company.employees %}
+      <tr>
+        <td><strong>{{emp.first_name}} {{emp.last_name}}</strong></td>
+        <td>{{emp.title}}</td>
+        <td>{{emp.department}}</td>
+        <td><a href="mailto:{{emp.email}}" class="email-link">{{emp.email}}</a></td>
+      </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+</div>
+{% endif %}
+
+{% endblock %}

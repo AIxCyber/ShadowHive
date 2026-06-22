@@ -1,0 +1,44 @@
+# ── Replace example.com with your actual domain ──────────────────────────
+# Portal (honeypot website) — public-facing
+example.com {
+    reverse_proxy portal:8001
+
+    header /* {
+        Strict-Transport-Security "max-age=31536000; includeSubDomains"
+        X-Content-Type-Options "nosniff"
+        X-Frame-Options "DENY"
+        Referrer-Policy "strict-origin-when-cross-origin"
+    }
+
+    log {
+        output file /data/logs/portal.log
+    }
+}
+
+# ShadowHive admin dashboard — internal/restricted
+admin.example.com {
+    reverse_proxy frontend:3000
+
+    header /* {
+        Strict-Transport-Security "max-age=31536000; includeSubDomains"
+        X-Content-Type-Options "nosniff"
+        X-Frame-Options "DENY"
+        Referrer-Policy "strict-origin-when-cross-origin"
+    }
+
+    log {
+        output file /data/logs/admin.log
+    }
+}
+
+# API subdomain (if needed for direct API access)
+api.example.com {
+    reverse_proxy api:8000
+
+    header /* {
+        Strict-Transport-Security "max-age=31536000; includeSubDomains"
+        X-Content-Type-Options "nosniff"
+        X-Frame-Options "DENY"
+        Referrer-Policy "strict-origin-when-cross-origin"
+    }
+}

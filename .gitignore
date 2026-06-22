@@ -1,0 +1,73 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.egg-info/
+.venv/
+venv/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+
+# Environment
+.env
+.env.local
+*.env
+
+# Node / Frontend
+node_modules/
+.next/
+out/
+dist/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Database
+*.db
+*.sqlite
+pgdata/
+neodata/
+ollamadata/
+
+# Docker
+docker-compose.override.yml
+
+# Logs
+*.log
+logs/
+honeypot_logs/
+cowrie_logs/
+
+# SQLite artifacts
+file::memory:
+
+# Build artifacts
+*.whl
+*.tar.gz
+dist/
+build/
+
+# Data
+data/
+
+# Auth keys / certs
+*.pem
+*.cert
+*.key
+*.jwk
+
+# Backup artifacts
+backup/
+backups/
+*.tgz

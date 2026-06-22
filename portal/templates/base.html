@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="../static/style.css">
+<link rel="icon" type="image/svg+xml" href="../static/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<title>{% if company %}{{company.name}}{% else %}Company Portal{% endif %}</title>
+</head>
+<body>
+<header>
+<div class="container">
+  <h1><a href="/">{% if company %}{{company.name}}{% else %}Company Portal{% endif %}</a></h1>
+  <nav>
+    <a href="/">Home</a>
+    <a href="/about">About</a>
+    <a href="/team">Team</a>
+    <a href="/careers">Careers</a>
+    <a href="/blog">Blog</a>
+    <a href="/contact">Contact</a>
+  </nav>
+</div>
+</header>
+
+<main>{% block content %}{% endblock %}</main>
+
+<footer>
+<div class="container">
+  <div class="footer-links">
+    <a href="https://linkedin.com">LinkedIn</a>
+    <span>|</span>
+    <a href="https://twitter.com">X</a>
+    <span>|</span>
+    <a href="https://github.com">GitHub</a>
+  </div>
+  <p>&copy; {{ now.year }}{% if company %} {{company.name}}{% else %} Company Portal{% endif %}. All rights reserved.</p>
+</div>
+</footer>
+</body>
+</html>

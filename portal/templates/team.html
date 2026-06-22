@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block content %}
+
+<section class="hero">
+<div class="container">
+  <h2>Our Team</h2>
+  {% if company %}<p>Meet the professionals behind {{company.name}}</p>{% endif %}
+</div>
+</section>
+
+<section class="section">
+<div class="container">
+{% if company and company.employees %}
+  <div class="grid">
+    {% for emp in company.employees %}
+    <div class="card-center">
+      <div class="avatar">{{emp.first_name[0]}}{{emp.last_name[0]}}</div>
+      <h4>{{emp.first_name}} {{emp.last_name}}</h4>
+      <div class="title">{{emp.title}}</div>
+      <div class="dept mb-8">{{emp.department}}</div>
+      {% if emp.bio %}<p class="card-text mb-16">{{emp.bio[:200]}}</p>{% endif %}
+      {% if emp.email %}<a href="mailto:{{emp.email}}" class="email-link">{{emp.email}}</a>{% endif %}
+    </div>
+    {% endfor %}
+  </div>
+{% else %}
+  <p class="text-center">No employee data available.</p>
+{% endif %}
+</div>
+</section>
+
+{% endblock %}

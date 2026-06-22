@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block content %}
+
+<section class="hero">
+<div class="container">
+  <h2>Careers</h2>
+  {% if company %}<p>Join the {{company.name}} team and help us shape the future of {{company.industry}}</p>{% endif %}
+</div>
+</section>
+
+<section class="section">
+<div class="container">
+{% if company %}
+  <div class="max-w-800 mx-auto mb-16">
+    <p class="text-body">{{company.name}} is growing. We are looking for passionate individuals to join our mission-driven team across multiple departments. We offer competitive compensation, equity packages, and a collaborative remote-first culture.</p>
+  </div>
+
+  <h3>Open Positions</h3>
+  <div class="grid mt-24">
+    {% for job in jobs %}
+    <div class="job-card card">
+      <div class="job-header">
+        <h4>{{job.title}}</h4>
+        <span class="admin-badge success nowrap">{{job.type}}</span>
+      </div>
+      <div class="dept mb-8">{{job.department}}</div>
+      <div class="job-meta">{{job.location}} &middot; {{job.salary}}</div>
+      <p class="job-desc">We are looking for an experienced professional to drive impact within our {{job.department}} team. You will work cross-functionally to deliver results that align with our strategic goals.</p>
+      <a href="/contact" class="btn btn-sm align-self-start">Apply Now</a>
+    </div>
+    {% endfor %}
+  </div>
+
+  <div class="cta-box">
+    <h3>Don't see the right fit?</h3>
+    <p>We are always looking for talented individuals. Send us your resume.</p>
+    <a href="/contact" class="btn">Get in Touch</a>
+  </div>
+{% else %}
+  <p class="text-center">No job listings available.</p>
+{% endif %}
+</div>
+</section>
+
+{% endblock %}

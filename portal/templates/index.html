@@ -1,0 +1,124 @@
+{% extends "base.html" %}
+{% block content %}
+
+{% if company %}
+<section class="hero">
+  <div class="hero-bg" style="background-image:url('https://images.unsplash.com/photo-1497366216548-37526070297c?w=1600&q=80')"></div>
+  <div class="hero-content">
+    <h2>{{company.name}}</h2>
+    <p>{{company.description or 'Innovating the future of ' + company.industry}}</p>
+    {% if company.location_city %}
+    <p class="text-muted mb-8">{{company.location_city}}{% if company.location_country %}, {{company.location_country}}{% endif %}</p>
+    {% endif %}
+    {% if company.founded_year %}<p class="text-small">Est. {{company.founded_year}}</p>{% endif %}
+    <div class="mt-32">
+      <a href="/about" class="btn">Learn More</a>
+      <a href="/contact" class="btn btn-outline">Contact Us</a>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+<div class="container">
+  <div class="grid-2">
+    <div>
+      <h3 class="left mb-16">Who We Are</h3>
+      <p class="text-body">{{company.description or 'A leading company in the ' + company.industry + ' space.'}}</p>
+      <div class="stats-row">
+        <div><strong class="stat-value">{{company.employees|length}}</strong><br><span class="stat-label">Team Members</span></div>
+        {% if company.founded_year %}<div><strong class="stat-value">{{now.year - company.founded_year}}+</strong><br><span class="stat-label">Years in Business</span></div>{% endif %}
+        <div><strong class="stat-value">{{company.org_chart|length if company.org_chart else 0}}</strong><br><span class="stat-label">Departments</span></div>
+      </div>
+    </div>
+    <div class="img-card">
+      <img src="https://images.unsplash.com/photo-1497366216548-37526070297c?w=600&q=80" alt="Office" class="img-fluid">
+    </div>
+  </div>
+</div>
+</section>
+
+<section class="section section-alt">
+<div class="container">
+  <h3>Our Team</h3>
+  <div class="grid">
+    {% for emp in company.employees[:6] %}
+    <div class="card-center">
+      <div class="avatar-sm">{{emp.first_name[0]}}{{emp.last_name[0]}}</div>
+      <h4>{{emp.first_name}} {{emp.last_name}}</h4>
+      <div class="title">{{emp.title}}</div>
+      <div class="dept">{{emp.department}}</div>
+      {% if emp.bio %}<p class="card-text">{{emp.bio[:150]}}{% if emp.bio|length > 150 %}...{% endif %}</p>{% endif %}
+    </div>
+    {% endfor %}
+  </div>
+  {% if company.employees|length > 6 %}
+  <div class="text-center mt-32"><a href="/team" class="btn">View Full Team ({{company.employees|length}})</a></div>
+  {% endif %}
+</div>
+</section>
+
+<section class="section">
+<div class="container">
+  <h3>What We Do</h3>
+  <div class="grid-3">
+    <div class="service-card">
+      <div class="icon-lg">&#128640;</div>
+      <h4>Innovation</h4>
+      <p class="text-caption">Pushing boundaries in {{company.industry}} with cutting-edge technology and forward-thinking strategies.</p>
+    </div>
+    <div class="service-card">
+      <div class="icon-lg">&#128101;</div>
+      <h4>Collaboration</h4>
+      <p class="text-caption">Cross-functional teams working together to deliver exceptional results for our clients.</p>
+    </div>
+    <div class="service-card">
+      <div class="icon-lg">&#127758;</div>
+      <h4>Global Reach</h4>
+      <p class="text-caption">Serving clients worldwide with a distributed team and localized expertise.</p>
+    </div>
+    <div class="service-card">
+      <div class="icon-lg">&#128200;</div>
+      <h4>Data-Driven</h4>
+      <p class="text-caption">Leveraging analytics and insights to make informed decisions that drive growth.</p>
+    </div>
+  </div>
+</div>
+</section>
+
+<section class="section section-alt">
+<div class="container">
+  <h3>Latest Insights</h3>
+  <div class="grid">
+    {% for doc in company.documents[:3] %}
+    <div class="card-vertical">
+      <div class="doc-thumb">{{doc.doc_type[:2]}}</div>
+      <h4>{{doc.title}}</h4>
+      <div class="dept mb-8">{{doc.doc_type}}</div>
+      <p class="card-text">{{doc.content[:200]}}{% if doc.content|length > 200 %}...{% endif %}</p>
+    </div>
+    {% endfor %}
+  </div>
+  {% if company.documents|length > 3 %}
+  <div class="text-center mt-32"><a href="/blog" class="btn">View All Articles</a></div>
+  {% endif %}
+</div>
+</section>
+
+<section class="section">
+<div class="container text-center max-w-600 mx-auto">
+  <h3>Get in Touch</h3>
+  <p class="text-lead">Have a question or want to learn more about {{company.name}}? We'd love to hear from you.</p>
+  <a href="/contact" class="btn">Contact Us</a>
+</div>
+</section>
+
+{% else %}
+<section class="hero">
+<div class="container">
+  <h2>Company Portal</h2>
+  <p>No company is currently deployed. Generate and deploy a company from the ShadowHive dashboard.</p>
+</div>
+</section>
+{% endif %}
+
+{% endblock %}

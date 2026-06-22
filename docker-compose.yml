@@ -1,0 +1,206 @@
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-shadowhive}
+      - NEO4J_PASSWORD=${NEO4J_PASSWORD:-shadowhive}
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-}
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY:-}
+      - AUTH_ENABLED=true
+      - JWT_SECRET=${JWT_SECRET:-}
+    volumes:
+      - ./backend:/app/backend
+      - ./configs:/app/configs
+      - honeypot_data:/app/honeypot_data
+      - ./docker-compose.yml:/app/docker-compose.yml:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./cowrie_logs:/app/cowrie_logs
+      - ./honeypot_logs:/app/honeypot_logs
+    depends_on:
+      postgres:
+        condition: service_healthy
+      neo4j:
+        condition: service_healthy
+      ollama:
+        condition: service_started
+    restart: unless-stopped
+
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: shadowhive
+      POSTGRES_USER: shadowhive
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-shadowhive}
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U shadowhive"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  neo4j:
+    image: neo4j:5-community
+    environment:
+      NEO4J_AUTH: neo4j/${NEO4J_PASSWORD:-shadowhive}
+    ports:
+      - "7474:7474"
+      - "7687:7687"
+    volumes:
+      - neodata:/data
+    healthcheck:
+      test: ["CMD-SHELL", "cypher-shell -u neo4j -p ${NEO4J_PASSWORD:-shadowhive} 'RETURN 1' || exit 1"]
+      interval: 10s
+      timeout: 10s
+      retries: 10
+
+  ollama:
+    image: ollama/ollama:latest
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollamadata:/root/.ollama
+    restart: unless-stopped
+
+  cowrie:
+    image: cowrie/cowrie:latest
+    ports:
+      - "2222:2222"
+    volumes:
+      - cowriedata:/cowrie/var
+      - honeypot_data:/cowrie/shared:ro
+      - ./scripts/cowrie.cfg:/cowrie/cowrie-git/cowrie.cfg:ro
+      - ./cowrie_logs:/cowrie/data
+    restart: unless-stopped
+
+  cowrie2:
+    image: cowrie/cowrie:latest
+    ports:
+      - "2223:2222"
+    volumes:
+      - cowriedata2:/cowrie/var
+      - honeypot_data:/cowrie/shared:ro
+      - ./scripts/honeypots/cowrie2.cfg:/cowrie/cowrie-git/cowrie.cfg:ro
+      - ./honeypot_logs:/app/honeypot_logs
+    restart: unless-stopped
+    profiles: ["full"]
+
+  cowrie3:
+    image: cowrie/cowrie:latest
+    ports:
+      - "2224:2222"
+    volumes:
+      - cowriedata3:/cowrie/var
+      - honeypot_data:/cowrie/shared:ro
+      - ./scripts/honeypots/cowrie3.cfg:/cowrie/cowrie-git/cowrie.cfg:ro
+      - ./honeypot_logs:/app/honeypot_logs
+    restart: unless-stopped
+    profiles: ["full"]
+
+  opencanary:
+    image: thinkst/opencanary:latest
+    ports:
+      - "21:21"
+      - "23:23"
+      - "25:25"
+      - "110:110"
+      - "143:143"
+      - "445:445"
+      - "3306:3306"
+      - "3389:3389"
+      - "5900:5900"
+      - "8080:8080"
+      - "5060:5060"
+      - "69:69/udp"
+    environment:
+      - OPENCANARY_CONFIG=/etc/opencanary.json
+    volumes:
+      - ./scripts/honeypots/opencanary.json:/etc/opencanary.json:ro
+      - ./honeypot_logs:/var/log/opencanary
+    restart: unless-stopped
+    profiles: ["full"]
+
+  dionaea:
+    image: dinotools/dionaea:latest
+    ports:
+      - "21:21"
+      - "42:42"
+      - "69:69/udp"
+      - "135:135"
+      - "443:443"
+      - "445:445"
+      - "1433:1433"
+      - "3306:3306"
+      - "5060:5060"
+      - "5061:5061"
+    volumes:
+      - dionaeadata:/var/lib/dionaea
+      - ./honeypot_logs:/var/log/dionaea
+    restart: unless-stopped
+    profiles: ["full"]
+
+  wordpress:
+    build:
+      context: ./wordpress
+      dockerfile: Dockerfile
+    ports:
+      - "8081:80"
+    volumes:
+      - ./honeypot_logs:/var/log/honeypot
+    restart: unless-stopped
+    profiles: ["full"]
+
+  portal:
+    build:
+      context: ./portal
+      dockerfile: Dockerfile
+    ports:
+      - "80:8001"
+    environment:
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-shadowhive}
+    volumes:
+      - honeypot_data:/app/honeypot_data:ro
+      - ./portal:/app
+      - ./honeypot_logs:/app/honeypot_logs
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_API_URL=http://api:8000
+      - API_URL_INTERNAL=http://api:8000
+      - WATCHPACK_POLLING=true
+    volumes:
+      - ./frontend/src:/app/src
+      - ./frontend/public:/app/public
+      - ./frontend/package.json:/app/package.json
+      - ./frontend/next.config.ts:/app/next.config.ts
+      - ./frontend/tailwind.config.ts:/app/tailwind.config.ts
+      - ./frontend/postcss.config.mjs:/app/postcss.config.mjs
+      - ./frontend/tsconfig.json:/app/tsconfig.json
+    depends_on:
+      - api
+    restart: unless-stopped
+
+volumes:
+  pgdata:
+  neodata:
+  ollamadata:
+  cowriedata:
+  cowriedata2:
+  cowriedata3:
+  dionaeadata:
+  honeypot_data:

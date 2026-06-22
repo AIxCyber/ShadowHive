@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% block content %}
+
+<section class="hero">
+  <div class="hero-bg" style="background-image:url('https://images.unsplash.com/photo-1423666639041-f56000c27a9a?w=1600&q=80')"></div>
+  <div class="hero-content">
+    <h2>Contact Us</h2>
+    {% if company %}<p>Get in touch with {{company.name}}</p>{% endif %}
+  </div>
+</section>
+
+<section class="section">
+<div class="container">
+{% if company %}
+  <div class="grid-2 max-w-1000 mx-auto">
+    <div>
+      <h3 class="left mb-24">Send Us a Message</h3>
+      <form method="POST" action="/contact">
+        <div class="form-group">
+          <label>Your Name</label>
+          <input type="text" name="name" required class="form-control">
+        </div>
+        <div class="form-group">
+          <label>Email Address</label>
+          <input type="email" name="email" required class="form-control">
+        </div>
+        <div class="form-group">
+          <label>Subject</label>
+          <input type="text" name="subject" class="form-control">
+        </div>
+        <div class="form-group">
+          <label>Message</label>
+          <textarea name="message" rows="5" required class="form-control resize-v"></textarea>
+        </div>
+        <button type="submit" class="btn">Send Message</button>
+      </form>
+    </div>
+    <div>
+      <h3 class="left mb-24">Contact Information</h3>
+      <div class="mb-24">
+        <div class="contact-label">Email</div>
+        <a href="mailto:info@{{company.name|lower|replace(' ', '')|replace(\"'\", '')[:20]}}.com" class="email-link">info@{{company.name|lower|replace(' ', '')|replace(\"'\", '')[:20]}}.com</a>
+      </div>
+      {% if company.location_city %}
+      <div class="mb-24">
+        <div class="contact-label">Location</div>
+        <p class="text-body">{{company.location_city}}{% if company.location_country %}, {{company.location_country}}{% endif %}</p>
+      </div>
+      {% endif %}
+      <div class="mb-24">
+        <div class="contact-label">Phone</div>
+        <p class="text-body">{{phone or '+1 (555) 000-0000'}}</p>
+      </div>
+      <div class="contact-info">
+        <h4>Office Hours</h4>
+        <p class="text-caption mt-4">Monday – Friday: 9:00 AM – 6:00 PM</p>
+        <p class="text-caption">Saturday: 10:00 AM – 2:00 PM</p>
+        <p class="text-caption">Sunday: Closed</p>
+      </div>
+    </div>
+  </div>
+{% else %}
+  <p class="text-center">No contact information available.</p>
+{% endif %}
+</div>
+</section>
+
+{% endblock %}

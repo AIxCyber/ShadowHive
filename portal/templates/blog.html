@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block content %}
+
+<section class="hero">
+<div class="container">
+  <h2>Blog</h2>
+  {% if company %}<p>Latest insights from {{company.name}}</p>{% endif %}
+</div>
+</section>
+
+<section class="section">
+<div class="container">
+{% if company and company.documents %}
+  <div class="grid">
+    {% for doc in company.documents %}
+    <div class="card-vertical">
+      <div class="doc-thumb">{{doc.doc_type[:2]}}</div>
+      <h4>{{doc.title}}</h4>
+      <div class="dept mb-8">{{doc.doc_type}}</div>
+      <p class="card-text">{{doc.content[:300]}}{% if doc.content|length > 300 %}...{% endif %}</p>
+      {% if doc.content|length > 300 %}
+      <a href="/contact" class="email-link mt-8 inline-block">Read more →</a>
+      {% endif %}
+    </div>
+    {% endfor %}
+  </div>
+{% else %}
+  <p class="text-center">No blog posts available.</p>
+{% endif %}
+</div>
+</section>
+
+{% endblock %}

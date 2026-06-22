@@ -1,0 +1,94 @@
+ai:
+  default_provider: ollama
+  providers:
+    ollama:
+      base_url: http://ollama:11434
+      default_model: llama3.2:3b
+      timeout: 600
+    openai:
+      api_key: ${OPENAI_API_KEY}
+      default_model: gpt-4o
+      timeout: 60
+    anthropic:
+      api_key: ${ANTHROPIC_API_KEY}
+      default_model: claude-sonnet-4-20250514
+      timeout: 60
+  routing:
+    company_generation: ollama
+    employee_generation: ollama
+    email_generation: ollama
+    document_generation: ollama
+    chat_simulation: ollama
+    threat_analysis: ollama
+    browser_activity: ollama
+  fallback:
+    enabled: true
+    order:
+      - ollama
+      - openai
+      - anthropic
+    cascade_on_error: true
+    cascade_on_timeout: true
+
+database:
+  postgresql:
+    host: postgres
+    port: 5432
+    database: shadowhive
+    user: shadowhive
+    password: ${POSTGRES_PASSWORD}
+    pool_size: 10
+  neo4j:
+    uri: bolt://neo4j:7687
+    user: neo4j
+    password: ${NEO4J_PASSWORD}
+
+server:
+  host: 0.0.0.0
+  port: 8000
+  debug: true
+  cors_origins:
+    - http://localhost:3000
+
+logging:
+  level: INFO
+  format: json
+
+auth:
+  enabled: ${AUTH_ENABLED:true}
+  mode: ${AUTH_MODE:jwt}
+  jwt:
+    secret: ${JWT_SECRET:}
+    algorithm: HS256
+    access_token_expire_minutes: 60
+    refresh_token_expire_days: 30
+    min_secret_length: 32
+  smtp:
+    host: ${SMTP_HOST:}
+    port: ${SMTP_PORT:587}
+    username: ${SMTP_USERNAME:}
+    password: ${SMTP_PASSWORD:}
+    from: ${SMTP_FROM:noreply@shadowhive.local}
+    tls: true
+  api_key: ${API_KEY:}
+  password_policy:
+    min_length: 8
+  lockout:
+    max_attempts: 5
+    lockout_minutes: 15
+  rate_limiting:
+    enabled: true
+    max_attempts: 10
+    window_seconds: 60
+
+ingestion:
+  cowrie:
+    enabled: true
+    base_url: http://cowrie:8080
+    api_key: ${COWRIE_API_KEY:}
+    poll_interval: 30
+    fetch_limit: 100
+
+monitoring:
+  cost_tracking: true
+  metrics_enabled: true

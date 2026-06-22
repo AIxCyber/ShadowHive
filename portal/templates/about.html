@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block content %}
+
+<section class="hero">
+  <div class="hero-bg" style="background-image:url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=1600&q=80')"></div>
+  <div class="hero-content">
+    <h2>About Us</h2>
+    {% if company %}<p>{{company.description or 'Learn more about ' + company.name}}</p>{% endif %}
+  </div>
+</section>
+
+<section class="section">
+<div class="container">
+{% if company %}
+  <div class="grid-2 mb-16">
+    <div>
+      <h3 class="left mb-16">{{company.name}}</h3>
+      <p class="text-body mb-16">{{company.description or ''}}</p>
+      <table>
+        <tr><th>Industry</th><td>{{company.industry}}</td></tr>
+        <tr><th>Size</th><td>{{company.size|capitalize}}</td></tr>
+        {% if company.founded_year %}<tr><th>Founded</th><td>{{company.founded_year}}</td></tr>{% endif %}
+        {% if company.location_city %}<tr><th>Location</th><td>{{company.location_city}}{% if company.location_country %}, {{company.location_country}}{% endif %}</td></tr>{% endif %}
+      </table>
+    </div>
+    <div class="grid-photo">
+      <div class="img-card">
+        <img src="https://images.unsplash.com/photo-1497366216548-37526070297c?w=400&q=80" alt="Office" class="img-fluid">
+      </div>
+      <div class="img-card mt-32">
+        <img src="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=400&q=80" alt="Team meeting" class="img-fluid">
+      </div>
+    </div>
+  </div>
+
+  {% if company.org_chart %}
+  <h3>Departments</h3>
+  <div class="grid mt-24">
+    {% for dept in company.org_chart %}
+    <div class="dept-card">
+      <div class="dept-icon">&#128188;</div>
+      <h4>{{dept.name}}</h4>
+      {% if dept.head_count %}<div class="dept">{{dept.head_count}} team members</div>{% endif %}
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+{% else %}
+  <p class="text-center">No company data available.</p>
+{% endif %}
+</div>
+</section>
+
+{% endblock %}

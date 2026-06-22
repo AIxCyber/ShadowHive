@@ -1,0 +1,77 @@
+PersonaTrap AI - Complete Project Scope
+
+PROJECT NAME
+ShadowHive Tagline: Autonomous Deception and Adversary Intelligence
+AI-Powered Adaptive Honeypot Personalities Platform
+
+PROBLEM STATEMENT
+Traditional honeypots are often detected because they are static and unrealistic.
+PersonaTrap AI generates evolving company environments, employee identities,
+documents, communications, credentials, and activity patterns to create a
+believable deception environment that attracts and studies attackers.
+
+HIGH-LEVEL GOAL
+Create a realistic organization that continuously evolves and appears genuine
+to attackers while collecting threat intelligence and mapping attacker behavior.
+
+CORE MODULES
+1. Company Persona Generator
+2. Employee Persona Generator
+3. Email Generator
+4. Document Generator
+5. Chat Simulator
+6. Browser Activity Generator
+7. Credential Decoy Generator
+8. File System Realism Engine
+9. Network Persona Generator
+10. Time Evolution Engine
+
+THREAT INTELLIGENCE
+- Commands executed
+- Files accessed
+- Search patterns
+- Credential harvesting attempts
+- Lateral movement indicators
+
+AI ANALYSIS
+- Attacker objectives
+- MITRE ATT&CK mapping
+- Confidence scores
+- Threat summaries
+- Attack timelines
+
+DASHBOARD
+- Company View
+- Honeypot View
+- Intelligence View
+
+TECH STACK
+Backend: Python, FastAPI
+Database: PostgreSQL, Neo4j
+AI: Ollama, LangGraph, Llama, Mistral
+Cybersecurity: Wazuh, Elastic, Cowrie, OpenCanary
+Frontend: React, Next.js
+
+ADVANCED FEATURE
+Memory Graph maintaining consistency across employees, departments,
+projects, documents, emails, and assets.
+
+MVP
+- Company Generator
+- Employee Generator
+- Email Generator
+- Document Generator
+- Cowrie Integration
+- MITRE Mapping
+- Dashboard
+
+FUTURE ENHANCEMENTS
+- Multi-agent deception
+- Autonomous lure generation
+- Adaptive attacker engagement
+- Attack path reconstruction
+- Threat actor profiling
+
+PORTFOLIO VALUE
+Demonstrates AI engineering, cybersecurity expertise, deception technology,
+graph databases, agentic systems, threat intelligence, and product architecture.
